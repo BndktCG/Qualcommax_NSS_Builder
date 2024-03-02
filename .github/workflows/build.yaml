@@ -46,7 +46,7 @@ jobs:
       - name: Checkout my repository for config file
         uses: actions/checkout@v4
         with:
-          repository: "starraiderx/Qualcommax_NSS_Builder"
+          repository: "BndktCG/Qualcommax_NSS_Builder"
           path: "my_repo"
       - name: Update and install feeds
         run: |

@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
   push:
   schedule:
-    - cron: '0 4 * * *'
+    - cron: "0 4 * * *"
 jobs:
   check:
     name: Check remote repo for new commits
@@ -31,7 +31,7 @@ jobs:
     name: Build the remote repository
     needs: check
     runs-on: ubuntu-latest
-    if: ${{ needs.check.outputs.commit_age <= 168 || github.event_name == 'workflow_dispatch' }}
+    if: ${{ needs.check.outputs.commit_age <= 24 || github.event_name == 'workflow_dispatch' }}
     steps:
       - name: Show inputs received from previous job
         env:
@@ -56,17 +56,18 @@ jobs:
         run: |
           mv my_repo/ax3600.config .config
           make defconfig
-      - name: QOL Enhancements 
+      - name: QOL Enhancements
         run: |
           mkdir -p files/etc/uci-defaults
           cat > files/etc/uci-defaults/xxx_config << EOF
-          uci set pbuf.opt.memory_profile=512mb
+          uci set pbuf.opt.memory_profile=off
           uci set wireless.radio0.country='US'
           uci set wireless.radio1.country='US'
           uci set wireless.radio2.country='US'
           uci set wireless.radio1.htmode='HE160'
           uci set wireless.radio1.channel='44'
           uci del firewall.cfg01e63d.flow_offloading
+          uci set dropbear.cfg014dd4.Interface='lan'
           uci commit
           EOF
       - name: Download package sources
@@ -117,4 +118,3 @@ jobs:
           draft: false
           prerelease: false
           token: ${{ secrets.GITHUB_TOKEN }}
-
